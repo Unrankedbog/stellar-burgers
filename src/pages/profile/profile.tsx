@@ -1,19 +1,22 @@
+import { updateUserThunk } from '@slices/userSlice';
 import { ProfileUI } from '@ui-pages';
 import { type SyntheticEvent, useEffect, useState } from 'react';
 
+import { useDispatch, useSelector } from '@services/store.ts';
+
 export const Profile = (): React.JSX.Element => {
-  /** TODO: Взять переменную из стора */
-  const user = {
-    name: '',
-    email: '',
-  };
+  const dispatch = useDispatch();
+
+  // 1. Берем реальные данные авторизованного пользователя из Redux
+  const { user } = useSelector((state) => state.user);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name || '',
+    email: user?.email || '',
     password: '',
   });
 
+  // 2. Синхронизируем локальную форму, если данные пользователя в сторе обновились
   useEffect(() => {
     setFormValue((prevState) => ({
       ...prevState,
@@ -27,15 +30,26 @@ export const Profile = (): React.JSX.Element => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
+  // 3. Отправка обновленных данных профиля на сервер
   const handleSubmit = (e: SyntheticEvent): void => {
     e.preventDefault();
+    if (isFormChanged) {
+      void dispatch(
+        updateUserThunk({
+          name: formValue.name,
+          email: formValue.email,
+          password: formValue.password,
+        })
+      );
+    }
   };
 
+  // 4. Сброс изменений к исходным серверным данным
   const handleCancel = (e: SyntheticEvent): void => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: '',
     });
   };
