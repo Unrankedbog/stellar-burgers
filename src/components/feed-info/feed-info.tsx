@@ -1,28 +1,40 @@
+import { getFeedState } from '@slices/feedSlice';
 import { FeedInfoUI } from '@ui';
+import { useMemo } from 'react';
 
-import type { TOrder } from '@utils-types';
-
-const getOrders = (orders: TOrder[], status: string): number[] =>
-  orders
-    .filter((item) => item.status === status)
-    .map((item) => item.number)
-    .slice(0, 20);
+import { useSelector } from '@services/store.ts';
 
 export const FeedInfo = (): React.JSX.Element => {
-  const feed = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    isLoading: false,
-    error: null,
-  };
-  const orders: TOrder[] = [];
+  // 1. Забираем весь объект состояния ленты из Redux
+  const feedState = useSelector(getFeedState);
+  const { orders, total, totalToday } = feedState;
 
-  const readyOrders = getOrders(orders, 'done');
+  // 2. Фильтруем готовые заказы
+  const readyOrders = useMemo(
+    () =>
+      orders
+        .filter((item) => item.status === 'done')
+        .map((item) => item.number)
+        .slice(0, 20),
+    [orders]
+  );
 
-  const pendingOrders = getOrders(orders, 'pending');
+  // 3. Фильтруем заказы в работе
+  const pendingOrders = useMemo(
+    () =>
+      orders
+        .filter((item) => item.status === 'pending')
+        .map((item) => item.number)
+        .slice(0, 20),
+    [orders]
+  );
+
 
   return (
-    <FeedInfoUI readyOrders={readyOrders} pendingOrders={pendingOrders} feed={feed} />
+    <FeedInfoUI
+      readyOrders={readyOrders}
+      pendingOrders={pendingOrders}
+      feed={feedState}
+    />
   );
 };

@@ -1,17 +1,19 @@
 import {
+  getOrdersApi,
+  getUserApi,
   loginUserApi,
   logoutApi,
   registerUserApi,
-  getUserApi,
-  updateUserApi,
   type TLoginData,
   type TRegisterData,
+  updateUserApi,
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { deleteCookie, setCookie } from '@utils/cookie';
 
-import type { TUser } from '@utils-types';
+import type { TOrder, TUser } from '@utils-types';
+import type { RootState } from '@services/store.ts';
 
 export const registerUserThunk = createAsyncThunk(
   'user/register',
@@ -52,9 +54,15 @@ export const logoutUserThunk = createAsyncThunk('user/logout', async () => {
   deleteCookie('accessToken');
 });
 
+export const getProfileOrdersThunk = createAsyncThunk('user/getOrders', async () => {
+  const res = await getOrdersApi();
+  return res; // Возвращает массив личных заказов пользователя
+});
+
 type TUserState = {
   user: TUser | null;
   isAuthChecked: boolean;
+  orders: TOrder[];
   isLoading: boolean;
   error: string | null;
 };
@@ -63,6 +71,7 @@ const initialState: TUserState = {
   user: null,
   isAuthChecked: false,
   isLoading: false,
+  orders: [],
   error: null,
 };
 
@@ -133,6 +142,10 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
       })
+      .addCase(getProfileOrdersThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.orders = action.payload;
+      })
       // Выход (Разлогин)
       .addCase(logoutUserThunk.fulfilled, (state) => {
         state.user = null;
@@ -141,4 +154,7 @@ export const userSlice = createSlice({
 });
 
 export const { authCheck } = userSlice.actions;
+
+export const getProfileOrdersSelector = (state: RootState) => state.user.orders;
+
 export default userSlice.reducer;

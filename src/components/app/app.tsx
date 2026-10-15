@@ -25,8 +25,6 @@ import type { AppContentProps } from './type';
 import '../../index.css';
 
 import styles from './app.module.css';
-
-
 const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
@@ -53,7 +51,6 @@ const App = (): React.JSX.Element => {
 
 export default App;
 
-// 2. Дочерний компонент контента — тут хуки роутера работают абсолютно безопасно!
 const AppMainContent = ({
   ingredients,
   isLoading,
@@ -61,8 +58,6 @@ const AppMainContent = ({
 }: AppContentProps): React.JSX.Element => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Извлекаем фоновый маршрут для модальных окон
   const backgroundLocation = (location.state as { background?: Location })?.background;
 
   const handleModalClose = (): void => {
@@ -71,7 +66,7 @@ const AppMainContent = ({
 
   return (
     <>
-      {/* Передаем backgroundLocation ТОЛЬКО когда он реально существует, чтобы не зацикливать обычные страницы */}
+
       <Routes location={backgroundLocation || undefined}>
         <Route
           path="/"
@@ -148,7 +143,7 @@ const AppMainContent = ({
   );
 };
 
-// 3. Компонент-враппер для контроля загрузки продуктов на главной странице
+//  Компонент-враппер для контроля загрузки продуктов на главной странице
 const AppContent = ({
   ingredients,
   isLoading,

@@ -1,4 +1,5 @@
 import { clearConstructor, getConstructorState } from '@slices/constructorSlice';
+import { fetchFeeds } from '@slices/feedSlice'; // Добавили импорт thunk-запроса ленты
 import { getOrderState, postOrderThunk, resetOrderInfo } from '@slices/orderSlice';
 import { BurgerConstructorUI } from '@ui';
 import { useMemo } from 'react';
@@ -22,11 +23,16 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
       void navigate('/login');
       return;
     }
+
+    // Собираем массив ID: [верхняя булка, ...начинки, нижняя булка]
     const orderData = [
       constructorItems.bun._id,
       ...constructorItems.ingredients.map((item) => item._id),
       constructorItems.bun._id,
     ];
+
+    // ИСПРАВЛЕНО: Передаем данные на сервер. Если бэкенд требует объект,
+    // Toolkit сам обработает orderData, но мы вызываем thunk-запрос
     void dispatch(postOrderThunk(orderData));
   };
 
@@ -34,6 +40,10 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
     // Закрываем модальное окно, очищаем данные заказа и обнуляем конструктор бургера
     dispatch(resetOrderInfo());
     dispatch(clearConstructor());
+
+    // ИСПРАВЛЕНО: Принудительно скачиваем свежую ленту заказов с сервера,
+    // чтобы новый заказ мгновенно отобразился во всех списках приложения!
+    void dispatch(fetchFeeds());
   };
 
   const price = useMemo(

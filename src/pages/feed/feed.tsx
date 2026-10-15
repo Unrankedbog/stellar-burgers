@@ -1,10 +1,11 @@
 import { fetchFeeds, getOrders } from '@slices/feedSlice.ts';
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import type React from 'react';
 import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from '@services/store.ts';
+
+import type React from 'react';
 export const Feed = (): React.JSX.Element => {
   // TODO: Взять переменную из стора
   const dispatch = useDispatch();
