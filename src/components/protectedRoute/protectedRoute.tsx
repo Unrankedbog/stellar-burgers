@@ -1,7 +1,8 @@
-import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { useSelector } from '@services/store.ts';
+
+import type React from 'react';
 
 type ProtectedRouteProps = {
   onlyUnauth?: boolean;

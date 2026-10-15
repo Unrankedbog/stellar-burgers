@@ -66,8 +66,7 @@ const AppMainContent = ({
 
   return (
     <>
-
-      <Routes location={backgroundLocation || undefined}>
+      <Routes location={backgroundLocation ?? undefined}>
         <Route
           path="/"
           element={

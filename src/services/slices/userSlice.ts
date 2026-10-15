@@ -12,8 +12,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { deleteCookie, setCookie } from '@utils/cookie';
 
-import type { TOrder, TUser } from '@utils-types';
 import type { RootState } from '@services/store.ts';
+import type { TOrder, TUser } from '@utils-types';
 
 export const registerUserThunk = createAsyncThunk(
   'user/register',
@@ -155,6 +155,7 @@ export const userSlice = createSlice({
 
 export const { authCheck } = userSlice.actions;
 
-export const getProfileOrdersSelector = (state: RootState) => state.user.orders;
+export const getProfileOrdersSelector = (state: RootState): TOrder[] =>
+  state.user.orders;
 
 export default userSlice.reducer;

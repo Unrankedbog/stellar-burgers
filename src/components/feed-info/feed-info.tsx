@@ -7,7 +7,7 @@ import { useSelector } from '@services/store.ts';
 export const FeedInfo = (): React.JSX.Element => {
   // 1. Забираем весь объект состояния ленты из Redux
   const feedState = useSelector(getFeedState);
-  const { orders, total, totalToday } = feedState;
+  const { orders } = feedState;
 
   // 2. Фильтруем готовые заказы
   const readyOrders = useMemo(
@@ -28,7 +28,6 @@ export const FeedInfo = (): React.JSX.Element => {
         .slice(0, 20),
     [orders]
   );
-
 
   return (
     <FeedInfoUI

@@ -12,21 +12,17 @@ export const BurgerConstructorElement = memo(function BurgerConstructorElement({
   totalItems,
 }: BurgerConstructorElementProps): React.JSX.Element {
   const dispatch = useDispatch();
-
-
   const handleMoveDown = (): void => {
     if (index < totalItems - 1) {
       dispatch(moveIngredient({ fromIndex: index, toIndex: index + 1 }));
     }
   };
 
-
   const handleMoveUp = (): void => {
     if (index > 0) {
       dispatch(moveIngredient({ fromIndex: index, toIndex: index - 1 }));
     }
   };
-
 
   const handleClose = (): void => {
     dispatch(removeIngredient(ingredient.id));

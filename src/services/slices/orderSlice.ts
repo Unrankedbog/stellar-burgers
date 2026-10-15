@@ -27,7 +27,6 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-
     resetOrderInfo: (state) => {
       state.orderModalData = null;
     },
