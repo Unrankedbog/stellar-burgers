@@ -1,4 +1,4 @@
-import { orderBurgerApi } from '@api';
+import { getOrderByNumberApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import type { TOrder } from '@utils-types';
@@ -8,6 +8,13 @@ export const postOrderThunk = createAsyncThunk(
   async (ingredientIds: string[]) => {
     const data = await orderBurgerApi(ingredientIds);
     return data.order;
+  }
+);
+export const fetchOrderByNumberThunk = createAsyncThunk(
+  'order/fetchByNumber',
+  async (number: number) => {
+    const data = await getOrderByNumberApi(number);
+    return data.orders[0];
   }
 );
 
@@ -45,6 +52,13 @@ export const orderSlice = createSlice({
         state.error = action.error.message ?? 'Не удалось оформить заказ';
       })
       .addCase(postOrderThunk.fulfilled, (state, action) => {
+        state.orderRequest = false;
+        state.orderModalData = action.payload;
+      })
+      .addCase(fetchOrderByNumberThunk.pending, (state) => {
+        state.orderRequest = true;
+      })
+      .addCase(fetchOrderByNumberThunk.fulfilled, (state, action) => {
         state.orderRequest = false;
         state.orderModalData = action.payload;
       });

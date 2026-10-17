@@ -40,7 +40,9 @@ export const Profile = (): React.JSX.Element => {
           email: formValue.email,
           password: formValue.password,
         })
-      );
+      ).then(() => {
+        setFormValue((prevState) => ({ ...prevState, password: '' }));
+      });
     }
   };
 

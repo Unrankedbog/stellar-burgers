@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { postOrderThunk } from '@slices/orderSlice.ts';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { TIngredient, TConstructorIngredient } from '@utils-types';
@@ -50,6 +51,12 @@ export const constructorSlice = createSlice({
       state.bun = null;
       state.ingredients = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postOrderThunk.fulfilled, (state) => {
+      state.bun = null;
+      state.ingredients = [];
+    });
   },
   selectors: {
     getConstructorState: (state) => state,

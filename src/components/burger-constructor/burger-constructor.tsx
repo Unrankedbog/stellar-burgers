@@ -1,4 +1,4 @@
-import { clearConstructor, getConstructorState } from '@slices/constructorSlice';
+import { getConstructorState } from '@slices/constructorSlice';
 import { fetchFeeds } from '@slices/feedSlice'; // Добавили импорт thunk-запроса ленты
 import { getOrderState, postOrderThunk, resetOrderInfo } from '@slices/orderSlice';
 import { BurgerConstructorUI } from '@ui';
@@ -39,7 +39,6 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
   const closeOrderModal = (): void => {
     // Закрываем модальное окно, очищаем данные заказа и обнуляем конструктор бургера
     dispatch(resetOrderInfo());
-    dispatch(clearConstructor());
 
     // ИСПРАВЛЕНО: Принудительно скачиваем свежую ленту заказов с сервера,
     // чтобы новый заказ мгновенно отобразился во всех списках приложения!

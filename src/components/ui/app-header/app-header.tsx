@@ -21,12 +21,6 @@ export const AppHeaderUI = ({ userName }: TAppHeaderUIProps): React.JSX.Element 
           className={({ isActive }) =>
             `${styles.link} ${isActive ? styles.link_active : ''} mr-10`
           }
-          style={{
-            textDecoration: 'none',
-            color: 'inherit',
-            display: 'flex',
-            alignItems: 'center',
-          }}
         >
           {({ isActive }) => (
             <>
@@ -42,12 +36,6 @@ export const AppHeaderUI = ({ userName }: TAppHeaderUIProps): React.JSX.Element 
           className={({ isActive }) =>
             `${styles.link} ${isActive ? styles.link_active : ''}`
           }
-          style={{
-            textDecoration: 'none',
-            color: 'inherit',
-            display: 'flex',
-            alignItems: 'center',
-          }}
         >
           {({ isActive }) => (
             <>
@@ -72,12 +60,6 @@ export const AppHeaderUI = ({ userName }: TAppHeaderUIProps): React.JSX.Element 
           className={({ isActive }) =>
             `${styles.link} ${isActive ? styles.link_active : ''}`
           }
-          style={{
-            textDecoration: 'none',
-            color: 'inherit',
-            display: 'flex',
-            alignItems: 'center',
-          }}
         >
           {({ isActive }) => (
             <>
