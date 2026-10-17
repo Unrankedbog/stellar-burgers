@@ -1,44 +1,38 @@
+import { getIngredients } from '@slices/ingredientsSlice';
+import { fetchOrderByNumberThunk, getOrderState } from '@slices/orderSlice';
 import { Preloader, OrderInfoUI } from '@ui';
-import { useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { useDispatch, useSelector } from '@services/store.ts';
 
 import type { TIngredient } from '@utils-types';
 
-export const OrderInfo = (): React.JSX.Element => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0,
-  };
+export const OrderInfo = memo(function OrderInfo(): React.JSX.Element | null {
+  const { number } = useParams<{ number: string }>();
+  const dispatch = useDispatch();
+  const ingredients = useSelector(getIngredients);
+  const { orderModalData: orderData } = useSelector(getOrderState);
 
-  const ingredients: TIngredient[] = [];
+  useEffect(() => {
+    if (number) {
+      void dispatch(fetchOrderByNumberThunk(Number(number)));
+    }
+  }, [number, dispatch]);
 
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
-
     const date = new Date(orderData.createdAt);
-
     type TIngredientsWithCount = Record<string, TIngredient & { count: number }>;
 
     const ingredientsInfo = orderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
-          if (ingredient) {
-            acc[item] = {
-              ...ingredient,
-              count: 1,
-            };
-          }
+          if (ingredient) acc[item] = { ...ingredient, count: 1 };
         } else {
           acc[item].count++;
         }
-
         return acc;
       },
       {}
@@ -48,18 +42,9 @@ export const OrderInfo = (): React.JSX.Element => {
       (acc, item) => acc + item.price * item.count,
       0
     );
-
-    return {
-      ...orderData,
-      ingredientsInfo,
-      date,
-      total,
-    };
+    return { ...orderData, ingredientsInfo, date, total };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
-    return <Preloader />;
-  }
-
+  if (!orderInfo) return <Preloader />;
   return <OrderInfoUI orderInfo={orderInfo} />;
-};
+});
