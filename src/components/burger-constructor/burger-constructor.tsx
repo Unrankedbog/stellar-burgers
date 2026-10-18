@@ -31,17 +31,12 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
       constructorItems.bun._id,
     ];
 
-    // ИСПРАВЛЕНО: Передаем данные на сервер. Если бэкенд требует объект,
-    // Toolkit сам обработает orderData, но мы вызываем thunk-запрос
     void dispatch(postOrderThunk(orderData));
   };
 
   const closeOrderModal = (): void => {
-    // Закрываем модальное окно, очищаем данные заказа и обнуляем конструктор бургера
     dispatch(resetOrderInfo());
 
-    // ИСПРАВЛЕНО: Принудительно скачиваем свежую ленту заказов с сервера,
-    // чтобы новый заказ мгновенно отобразился во всех списках приложения!
     void dispatch(fetchFeeds());
   };
 

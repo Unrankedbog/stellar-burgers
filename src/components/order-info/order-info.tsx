@@ -1,5 +1,9 @@
 import { getIngredients } from '@slices/ingredientsSlice';
-import { fetchOrderByNumberThunk, getOrderState } from '@slices/orderSlice';
+import {
+  fetchOrderByNumberThunk,
+  getOrderState,
+  clearOrderPreview,
+} from '@slices/orderSlice';
 import { Preloader, OrderInfoUI } from '@ui';
 import { memo, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,12 +16,15 @@ export const OrderInfo = memo(function OrderInfo(): React.JSX.Element | null {
   const { number } = useParams<{ number: string }>();
   const dispatch = useDispatch();
   const ingredients = useSelector(getIngredients);
-  const { orderModalData: orderData } = useSelector(getOrderState);
+  const { orderByNumberData: orderData } = useSelector(getOrderState);
 
   useEffect(() => {
     if (number) {
       void dispatch(fetchOrderByNumberThunk(Number(number)));
     }
+    return (): void => {
+      dispatch(clearOrderPreview());
+    };
   }, [number, dispatch]);
 
   const orderInfo = useMemo(() => {
