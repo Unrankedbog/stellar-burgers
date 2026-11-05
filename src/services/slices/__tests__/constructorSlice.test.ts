@@ -102,7 +102,8 @@ describe('Тестирование редюсера constructorSlice', () => {
   test('должен полностью очищать стейт при экшене clearConstructor', () => {
     const filledState = {
       bun: { ...MOCK_BUN, id: 'mock-bun-id' },
-      ingredients: [{ ...MOCK_SAUCE, id: 'mock-sauce-id' },
+      ingredients: [
+        { ...MOCK_SAUCE, id: 'mock-sauce-id' }, // Явно передаем id для TypeScript типов
       ],
     };
 
